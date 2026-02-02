@@ -19,7 +19,7 @@ def forca (tela,fundo_atual,tamanho_tela):
     
 
     fonte = pygame.font.Font('fontes/Dogica.ttf',32)
-    palavra = 'MARTELO'
+    palavra = 'maldiçao'
     letras = ['_'] * len (palavra)
     letras_usadas = []
     tentativas = 6
@@ -31,18 +31,20 @@ def forca (tela,fundo_atual,tamanho_tela):
                 #if event.key == pygame.K_ESCAPE:
                     #liga = False  
                 if event.unicode.isalpha():
-                    letra = event.unicode.upper()
-                    if letra not in letras_usadas:
-                        letras_usadas.append(letra)    
+                    letra = event.unicode.lower()
+
                     if letra in palavra:
+                        if letra not in letras_usadas:
+                            letras_usadas.append(letra)    
                         for i in range(len(palavra)):
                             if palavra[i] == letra:
                                 letras[i]=letra
-                    else:
-                        tentativas -= 1 
+                    elif letra not in letras_usadas:
+                        tentativas -= 1
+                        if letra not in letras_usadas:
+                            letras_usadas.append(letra)    
 
 
-        
 
         if '_' not in letras:
             return('venceu')
@@ -73,11 +75,11 @@ def forca (tela,fundo_atual,tamanho_tela):
         tela.blit(texto,(400,360)) 
 
        # usadas = fonte.render('usadas:'+','.join(letras_usadas),True,(0,0,0))
-        #tela.blit(usadas,(250,180))
+      #  tela.blit(usadas,(250,180))
 
         pygame.display.update()      
         if tentativas == 0:
-            sleep(5)
+            sleep(3)
             susto = pygame.image.load('susto.png').convert()
             susto = pygame.transform.scale(susto, (tamanho_tela))
 
