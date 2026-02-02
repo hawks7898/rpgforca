@@ -1,9 +1,9 @@
 import pygame 
 from sons_def import *
 from pygame.locals import *
-from minigame import forca
+from minigame import *
 from time import sleep
-from boneca_sumindo import*
+from boneca_sumindo import *
 
 pygame.init()
 
@@ -32,12 +32,42 @@ frame = 0
 tempo = 0 
 andando = False
 armario = 'fechado'
-item_boneca = 0
-item_caneta = 0
-jogou = True
+bau = 'fechado'
+jogou = False
 criado_ab = 'fechado'
+criado_ab_jogo = 'fechado'
+ritual = False
+jogou_cama = False
+jogou_criado = False
+jogou_parede = False
+jogou_teia = False
+selos_quebrados = 0
+fase1 = False
 
 
+
+#variaveis dos itens -----------------
+item_caneta = 0
+item_boneca = 0
+item_chave_boneca = 0
+pegou_c_b = False
+
+#quarto jogo da forca-------------------------------------------------------------------------------- 
+
+papel_de_parede = pygame.image.load('parede_jogo/papel_de_parede.png').convert_alpha()
+#papel_de_parede = pygame.transform.scale(papel_de_parede,(100,100))
+papel_de_parede_int = papel_de_parede.get_rect(topleft=(690,115))
+
+
+teia = pygame.image.load('imagens/teia.png').convert_alpha()
+teia_int = teia.get_rect(topleft=(70,130))
+
+#biletes -----------------------------0--------------------
+
+bilete_ritual = pygame.image.load('biletes/papel.png').convert_alpha()
+
+bilete_forca = pygame.image.load('biletes/papel dobrado.png').convert_alpha()
+bilete_forca_int = bilete_forca.get_rect(topleft=(350,400))
 
 #vidas sprites---------------------------------------------------------------------------------------------------------
 
@@ -62,14 +92,31 @@ forca6 = pygame.transform.scale(forca6,(120,150))
 
 #fundos-------------------------------------------------------------------------------------------
 
+criado_fundo_fec_jogo = pygame.image.load('armario_selo/criado_fec.png').convert()
+criado_fundo_fec_jogo = pygame.transform.scale(criado_fundo_fec_jogo, (tamanho_tela))
+
+criado_fundo_aber_jogo = pygame.image.load('armario_selo/criado_aber.png').convert()
+criado_fundo_aber_jogo = pygame.transform.scale(criado_fundo_aber_jogo, (tamanho_tela))
+
+#------------------------------------------
+
+criado_fundo_fec = pygame.image.load('armario_selo/criado_fec.png').convert()
+criado_fundo_fec = pygame.transform.scale(criado_fundo_fec, (tamanho_tela))
+
+criado_fundo_aber = pygame.image.load('armario_selo/criado_tuto.png').convert()
+criado_fundo_aber = pygame.transform.scale(criado_fundo_aber, (tamanho_tela))
+
+#---------------------------------------------
+
 game_over = pygame.image.load('imagens/game_over.png').convert()
 game_over = pygame.transform.scale(game_over, (tamanho_tela))
 
 fundo_quarto = pygame.image.load('imagens/quarto.png').convert()
 fundo_quarto = pygame.transform.scale(fundo_quarto, (tamanho_tela))
-fundo_corredor = pygame.image.load('imagens/corredor.png').convert()
-fundo_corredor = pygame.transform.scale(fundo_corredor,(tamanho_tela))
 
+
+fundo_guardaroupa_bau = pygame.image.load('armario_selo/bau aberto.png').convert()
+fundo_guardaroupa_bau = pygame.transform.scale(fundo_guardaroupa_bau,(tamanho_tela))
 
 fundo_guardaroupa = pygame.image.load('imagens/guardaroupa2.png').convert()
 fundo_guardaroupa = pygame.transform.scale(fundo_guardaroupa,(tamanho_tela))
@@ -86,7 +133,10 @@ papel = pygame.image.load('imagens/papel.png').convert_alpha()
 
 boneca1 = pygame.image.load('imagens/boneca.png').convert_alpha()
 boneca1 = pygame.transform.scale(boneca1,(54,54))
-#boneca2 = pygame.image.load('imagens/boneca.png').convert_alpha()
+boneca2 = pygame.image.load('imagens/boneca_item.png').convert_alpha()
+boneca2 = pygame.transform.scale(boneca2,(44,54))
+boneca2_int = boneca2.get_rect(topleft=(350,420))
+
 #boneca3 = pygame.image.load('imagens/boneca.png').convert_alpha()
 #boneca4 = pygame.image.load('imagens/boneca.png').convert_alpha()
 #boneca5 = pygame.image.load('imagens/boneca.png').convert_alpha()
@@ -94,15 +144,54 @@ boneca1 = pygame.transform.scale(boneca1,(54,54))
 caneta = pygame.image.load('imagens/caneta.png').convert_alpha()
 caneta = pygame.transform.scale(caneta,(40,75))
 
+caneta_criado = pygame.image.load('imagens/caneta_criado.png').convert_alpha()
+caneta_criado = pygame.transform.scale(caneta_criado,(25,105))
+caneta_int = caneta_criado.get_rect(topleft=(450,325))
+
+chave_criado =  pygame.image.load('imagens/chave_boneca.png').convert_alpha()
+chave_criado = pygame.transform.scale(chave_criado,(54,54))
+
+papel_dobrado = pygame.image.load('biletes/papel_dobrad.png').convert_alpha()
+papel_dobrado_int = papel_dobrado.get_rect(topleft=(300,350))
+
 #pentagramas-----------------------------------------------------------------------------------------------------------
 pentagrama = pygame.image.load('pentagrama/pentagrama_vazio.png').convert_alpha()
 pentagrama = pygame.transform.scale(pentagrama,(90,100))
 pentagrama_interagir = pentagrama.get_rect(topleft=(350,350))
 
+#armario selos -----------------------------------------------------------------------------------------------------------------
+
+selo4 = pygame.image.load('armario_selo/todos.png').convert_alpha()
+selo4 = pygame.transform.scale(selo4,(77,100))
+
+selo3 = pygame.image.load('armario_selo/3.png').convert_alpha()
+selo3 = pygame.transform.scale(selo3,(77,100))
+
+selo2 = pygame.image.load('armario_selo/2.png').convert_alpha()
+selo2 = pygame.transform.scale(selo2,(77,100))
+
+selo1 = pygame.image.load('armario_selo/1.png').convert_alpha()
+selo1 = pygame.transform.scale(selo1,(77,100))
+
+armario_aberto = pygame.image.load('armario_selo/abrir.png').convert_alpha()
+armario_aberto = pygame.transform.scale(armario_aberto,(77,100))
+
+
 
 #colisoes e interações---------------------------------------------------------------------------------------------------------------------------------
 
 
+tabua = pygame.image.load('imagens/parede.png').convert_alpha()
+tabua = pygame.transform.scale(tabua,(60,30))
+tabua_inter = tabua.get_rect (topleft=(580,420))
+
+cama  = pygame.image.load('imagens/parede.png').convert_alpha()
+cama = pygame.transform.scale(tabua,(30,20))
+cama_inter = cama.get_rect (topleft=(600,230))
+
+criado_jogo = pygame.image.load('imagens/armariosinhodireita.png').convert_alpha()
+criado_jogo = pygame.transform.scale(criado_jogo,(48,40))
+criado_interasao_jogo = criado_jogo.get_rect(topleft = (528,140))
 
 
 armariro_img = pygame.image.load('imagens/armario.png').convert_alpha()
@@ -137,9 +226,22 @@ armariro_img2 = pygame.image.load('imagens/armario.png').convert_alpha()
 armariro_img2 = pygame.transform.scale(armariro_img2,(77,100))
 armariro_rect2 = armariro_img2.get_rect (topleft=(445,60))
 
+
+#------------------------------------------------------------------------------------
+
+
 abrir = pygame.image.load('imagens/parede.png').convert_alpha()
 abrir = pygame.transform.scale(abrir,(250,400))
 abrir_colisao = abrir.get_rect(topleft = (260,120))
+
+abrir_criado = pygame.image.load('imagens/parede.png').convert_alpha()
+abrir_criado = pygame.transform.scale(abrir_criado,(50,50))
+abrir_criado_col = abrir_criado.get_rect(topleft = (380,380))
+
+abrir_criado_jogo = pygame.image.load('imagens/parede.png').convert_alpha()
+abrir_criado_jogo = pygame.transform.scale(abrir_criado_jogo,(360,140))
+abrir_criado_col_jogo = abrir_criado_jogo.get_rect(topleft = (230,300))
+
 
 
 player_sprites = {
@@ -164,6 +266,10 @@ player_sprites = {
         pygame.image.load("imagens/playeresquerda2.png").convert_alpha()
     ]
 }
+
+player_deitado = pygame.image.load('imagens/playerdeitado.png').convert_alpha()
+player_deitado = pygame.transform.scale(player_deitado, (50, 30))
+
 
 
 
@@ -197,15 +303,19 @@ porta_rect = porta_img.get_rect(topleft = (320,50))
 #------------------------------------------------------------------------------------------------------------------------
 
 quarto_colisoes = [parede2_rect,parede3_rect,parede4_rect,parede_rect,cama_esqueda_colisao,cama_direita_colisao,armariosinho_colisao,armariosinho_colisao2,armariro_rect2]
-corredor_colisoes = []
 
+musica_fun = True
 
-
+inicio = pygame.time.get_ticks()
 fundo()
 while True:
-    tela.fill((0, 0, 0))
+    
+
+    
+    
 
     vida = max(0, min(6,vida))
+    selos_quebrados = max(0, min(4,selos_quebrados))
 
     tempo_inicio = pygame.time.get_ticks()
     
@@ -213,35 +323,68 @@ while True:
     clock.tick(fps)
 
 #evento-------------------------------------------------------------------------------------------------------------------------------------------   
-
+    
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             exit()
+
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_pos = event.pos
-                if bau_rect.collidepoint(mouse_pos) and sala == 'guardaroupa' and jogou:
+                if bau_rect.collidepoint(mouse_pos) and sala == 'guardaroupa'and item_caneta == 1 and not jogou :
                     estado = 'forca'
                     teste = forca(tela,fundo_atual,tamanho_tela)
                     estado = 'casa'    
                     if teste == 'perdeu':
-                        vida -= 1 
-                        if vida == 0:
-                            fundo_atual = game_over
-                            tela.blit(fundo_atual,(0, 0))
-                            pygame.display.update()
-                            sleep(10)
-                            break
+                        vida -= 1
 
                     elif teste == 'venceu':
-                        jogou = False
-                        item_boneca = 1
+                        jogou = True
+                        sala = 'quarto'
+                        bau = 'aberto'
                         interaçao()
 
             if abrir_colisao.collidepoint(mouse_pos) and sala == 'guarda roupa fechado':
-                        sala = 'guardaroupa'
-                        armario = 'aberto'
+                sala = 'guardaroupa'
+                armario = 'aberto'
+
+            if abrir_criado_col.collidepoint(mouse_pos) and sala == 'criado fechado':
+                criado_ab = 'aberto'
+                sala = 'criado aberto'
+
+            if abrir_criado_col_jogo.collidepoint(mouse_pos) and sala == 'criado jogo fechado' and item_chave_boneca >= 1:
+                item_chave_boneca = 0 
+                criado_ab_jogo = 'aberto'
+                sala = 'criado jogo aberto'   
+
+
+            if boneca2_int.collidepoint(mouse_pos) and sala == 'bau aberto':
+                item_boneca = 1  
+                
+            if caneta_int.collidepoint(mouse_pos)  and sala == 'criado aberto':
+                
+                item_caneta = 1     
+
+            if papel_dobrado_int.collidepoint(mouse_pos) and sala == 'bau aberto' :
+                sala = 'bilete ritual'    
+
+            if bilete_forca_int.collidepoint(mouse_pos) and sala == 'criado jogo aberto':
+                if not jogou_criado and item_caneta == 1:
+                    jogo_criado = forca_criado(tela, fundo_atual,tamanho_tela)
+                    if jogo_criado == 'perdeu':
+                        vida -= 1
+                    elif jogo_criado == 'venceu':
+                        selos_quebrados += 1
+                        jogou_criado = True   
+               
+#itens---------------------------------
+
+    if player_rect.colliderect(tabua_inter) and teclas[pygame.K_z] :
+        if not pegou_c_b:
+            item_chave_boneca = 1
+            pegou_c_b = True            
 
 #movimento-------------------------------------------------------------------------------------------------------------------------
 
@@ -256,7 +399,7 @@ while True:
 
     andando = False
     if estado == 'casa':
-        if teclas[pygame.K_a] or teclas[pygame.K_LEFT]:
+        if  teclas[pygame.K_LEFT]:
             player_rect.x -= velocidade
             direcao = 'esquerda'
             andando = True
@@ -266,7 +409,7 @@ while True:
             
                 
                 
-        if teclas[pygame.K_d] or teclas[pygame.K_RIGHT]:
+        if  teclas[pygame.K_RIGHT]:
             player_rect.x += velocidade
             direcao = 'direita'
             andando = True
@@ -275,7 +418,7 @@ while True:
                     player_rect.right = obj.left
 
         
-        if teclas[pygame.K_w] or teclas[pygame.K_UP]:
+        if  teclas[pygame.K_UP]:
             player_rect.y -= velocidade
             direcao = 'tras'
             andando = True
@@ -283,7 +426,8 @@ while True:
                 if player_rect.colliderect(obj):
                     player_rect.top = obj.bottom 
 
-        if teclas[pygame.K_s] or teclas[pygame.K_DOWN]:
+
+        if  teclas[pygame.K_DOWN]:
             player_rect.y += velocidade 
             direcao = 'frente'
             andando = True
@@ -312,44 +456,118 @@ while True:
     elif andando == True and direcao == "esquerda":
         player_img = pygame.transform.scale(player_img, (35, 65))                  
     else:    
-        player_img = pygame.transform.scale(player_img, (42, 65))                  
+        player_img = pygame.transform.scale(player_img, (42, 65))    
+
+    if player_rect.colliderect(cama_inter) and teclas[pygame.K_z]:
+        player_rect.x,player_rect.y = 580,220
+        player_img = player_deitado              
+
+        if not jogou_cama and item_caneta == 1:   
+            player_img = player_deitado   
+            forcama = forca_cama(tela,fundo_atual,tamanho_tela)
+
+            if forcama == 'venceu':
+                jogou_cama = True
+                selos_quebrados += 1
+            elif forcama == 'perdeu':
+                vida -= 1     
 
 #guardaroupa e corredor-----------------------------------------------------------------------------------------------------------------
 
-    if player_rect.colliderect(porta_rect) and teclas[pygame.K_z] and chave >= 1:
+    if player_rect.colliderect(porta_rect) and teclas[pygame.K_z] and chave >= 1 or player_rect.colliderect(porta_rect) and teclas[pygame.K_z] and fase1 :
         porta()
-        sleep(0.1)
-        sala = 'corredor'  
-    if player_rect.colliderect(armariro_rect) and teclas[pygame.K_z]:
+         
+    elif player_rect.colliderect(porta_rect) and teclas[pygame.K_z] and chave == 0:
+        play = pygame.time.get_ticks()
+        trancado() 
+        
+            
+
+    if player_rect.colliderect(armariro_rect) and teclas[pygame.K_z] and selos_quebrados == 4:
         if armario == 'aberto':
-            sala = 'guardaroupa'
+            if bau == 'aberto':
+                sala = 'bau aberto'
+            elif bau == 'fechado':
+                sala = 'guardaroupa'
         elif armario == 'fechado':
             sala = 'guarda roupa fechado'
+
     if sala == 'guardaroupa' and teclas[pygame.K_x]:
         sala = 'quarto'    
-    if sala == 'guarda roupa fechado' and teclas[pygame.K_x]:
+    if sala == 'guarda roupa fechado' and teclas[pygame.K_x] or sala == 'bau aberto' and teclas[pygame.K_x]:
         sala = 'quarto' 
     elif sala == 'guardaroupa' and teclas[pygame.K_2]:
         armario = 'fechado'
         sala = 'guarda roupa fechado'       
-            
+              
 #criado interaçao-----------------------------------------------------------------------------------------------------------------------
 
-    if player_rect.colliderect(criado_interasao) and criado_ab == 'fechado'and teclas[pygame.K_z]:
-        sala = 'criado fechado'
-    if player_rect.colliderect(criado_interasao) and criado_ab == 'aberto' and teclas[pygame.K_zp]:
-        sala = 'criado aberto'    
+
+    if player_rect.colliderect(criado_interasao) and teclas[pygame.K_z]:
+        estado = 'criado'
+        if criado_ab == 'fechado':
+            sala = 'criado fechado'
+        elif criado_ab == 'aberto':
+            sala = 'criado aberto'
+
+        
+    if teclas[pygame.K_x] and estado == 'criado':
+        sala = 'quarto'
+        estado = 'casa'
+
+    if player_rect.colliderect(criado_interasao_jogo) and teclas[pygame.K_z]:
+        estado = 'criado jogo'
+        if criado_ab_jogo == 'fechado':
+            sala = 'criado jogo fechado'
+        elif criado_ab_jogo == 'aberto':
+            sala = 'criado jogo aberto'
+
+        
+    if teclas[pygame.K_x] and estado == 'criado jogo':
+        sala = 'quarto'
+        estado = 'casa'
+
+#====================================================================================================================================================
+    if player_rect.colliderect(papel_de_parede_int) and selos_quebrados == 3 and item_caneta == 1 and teclas[pygame.K_z] and not jogou_parede :
+        v_d = ultimo(tela,fundo_atual,tamanho_tela)
+        if v_d == 'perdeu':
+            vida -= 1 
+        elif v_d == 'venceu':
+            selos_quebrados += 1
+            jogou_parede = True
+
+    if player_rect.colliderect(teia_int) and item_caneta == 1 and teclas[pygame.K_z] and not jogou_teia:
+        vit_der = teia_jogo(tela,fundo_atual,tamanho_tela)
+        if vit_der == 'perdeu':
+            vida -= 1 
+        if vit_der == 'venceu':
+            jogou_teia = True
+            selos_quebrados += 1 
+
+
+        
+    
 
 
 #salas---------------------------------------------------------------------------------------------------------------------    
     if sala == 'quarto':
         fundo_atual = fundo_quarto 
-    elif sala == 'corredor':
-        fundo_atual = fundo_corredor
     elif sala == 'guardaroupa':   
         fundo_atual = fundo_guardaroupa 
     elif sala == 'guarda roupa fechado':
         fundo_atual = fundo_guardaroupa_fechado    
+    elif sala == 'bau aberto':
+        fundo_atual = fundo_guardaroupa_bau    
+    elif sala    == 'criado fechado':
+        fundo_atual = criado_fundo_fec
+    elif sala    == 'criado aberto':
+        fundo_atual = criado_fundo_aber
+    elif sala == 'bilete ritual':
+        fundo_atual = bilete_ritual    
+    elif sala == 'criado jogo fechado':
+        fundo_atual = criado_fundo_fec_jogo    
+    elif sala == 'criado jogo aberto':
+        fundo_atual = criado_fundo_aber_jogo   
     
 
     #inventario----------------------------------------------------------------------------------------------------------
@@ -388,43 +606,54 @@ while True:
             tela.blit(armariosinho_img2,armariosinho_colisao2)
             tela.blit(porta_img, porta_rect)
             tela.blit(armariro_img, armariro_rect)
-            tela.blit(fundo_atual,(0, 0))
             tela.blit(criado,criado_interasao)
+            tela.blit(tabua,tabua_inter)
+            tela.blit(cama,cama_inter)
+            tela.blit(criado_jogo,criado_interasao_jogo)
+            #oque vai aparecer -----------------
             
-                    
+            tela.blit(fundo_atual,(0, 0))
+            tela.blit(teia,teia_int)
+            if selos_quebrados == 3:
+                tela.blit(papel_de_parede,papel_de_parede_int)
+
+            if selos_quebrados == 0:
+                tela.blit(selo4,(435,96))
+            elif selos_quebrados == 1:
+                tela.blit(selo3,(435,96))    
+            elif selos_quebrados == 2:
+                tela.blit(selo2,(435,96))
+            elif selos_quebrados == 3:
+                tela.blit(selo1,(435,96))     
+            if armario == 'aberto':
+                tela.blit(armario_aberto,(435,96))
+
                 
             if item_boneca >=1:
                 tela.blit(pentagrama,pentagrama_interagir)
             tela.blit(player_img, player_rect) 
             
-
+#------------------------------------------------------------------
         elif sala == 'guardaroupa':
             tela.blit(bau_img,bau_rect)
             tela.blit(fundo_atual,(0,0))
             
-        elif sala == 'corredor':
-            tela.blit(fundo_atual,(0,0))
-            tela.blit(player_img, player_rect) #mmmmmm   
-
+#--------------------------------------------------
         elif sala == 'guarda roupa fechado':
             tela.blit(abrir,abrir_colisao)
             tela.blit(fundo_atual,(0,0))       
+#--------------------------------------------------        
+        elif sala == 'bau aberto':
+            tela.blit(fundo_atual,(0,0))  
+            tela.blit(papel_dobrado,papel_dobrado_int)
+            if item_boneca == 0 and not ritual:
+                tela.blit(boneca2,boneca2_int)
 
-#vidas desnhos na tela--------------------------------------------------------------------------------------------------------
-        if vida == 5: 
-            tela.blit(forca1,(0,0))
-        if vida == 4: 
-            tela.blit(forca2,(0,0))
-        if vida == 3: 
-            tela.blit(forca3,(0,0))
-        if vida == 2: 
-            tela.blit(forca4,(0,0))
-        if vida == 1: 
-            tela.blit(forca5,(0,0))  
-        if vida == 0: 
-            tela.blit(forca6,(0,0))                     
-                  
-
+        elif sala == 'bilete ritual':
+            tela.blit(fundo_atual,(0,0))        
+            if teclas[pygame.K_x]:
+                sleep(0.5)
+                sala = 'bau aberto'
 #inventario------------------------------------------------------------------------------------------------------
 
     elif teclas [pygame.K_c] and estado == 'inventario':
@@ -434,6 +663,8 @@ while True:
             tela.blit(boneca1,(210,315))
         if item_caneta >= 1:
             tela.blit(caneta,(290,300))    
+        if item_chave_boneca == 1:
+            tela.blit(chave_criado,(364,312))    
 
 
 #invocaçao----------------------------------------------------------------------------------------------------------------------
@@ -446,9 +677,44 @@ while True:
             b_pentagrama(tela,(350,350))
            
             if tempo_inicio - agora  >= 6000:
-                estado = 'casa'    
-        tela.blit(player_img, player_rect)         
+                ritual = True
+                estado = 'casa'  
+                chave = 1
+        tela.blit(player_img, player_rect)    
+#-----------------------------------------------------------------------
+    if vida == 0:
+        estado = 'game over'
+        tela.fill((0, 0, 0))
+        fundo_atual = game_over
+        tela.blit(fundo_atual,(0, 0))
+#--------------------------------------------------------------------------
+    elif estado == 'criado':
+        tela.blit(abrir_criado,abrir_criado_col)
+        tela.blit(fundo_atual,(0,0)) 
+        if item_caneta == 0 and criado_ab == 'aberto':
+                tela.blit(caneta_criado,caneta_int) 
+        
+    elif estado == 'criado jogo':
+        tela.blit(fundo_atual,(0,0)) 
+        if sala == 'criado jogo aberto':
+            tela.blit(bilete_forca,bilete_forca_int)
+
+
+#vidas na tela --------------------------------------------------------------------------------------------------------
+    if vida == 5: 
+        tela.blit(forca1,(0,0))
+    if vida == 4: 
+        tela.blit(forca2,(0,0))
+    if vida == 3: 
+        tela.blit(forca3,(0,0))
+    if vida == 2: 
+        tela.blit(forca4,(0,0))
+    if vida == 1: 
+        tela.blit(forca5,(0,0))  
+    if vida == 0: 
+        tela.blit(forca6,(0,0))            
             
+        
 
 
 
