@@ -28,6 +28,9 @@ game_variaveis ={
 
 #====================================================================================================================================
 
+pygame.init()
+pygame.mixer.init()
+
 tamanho_tela = (800,700)
 tela = pygame.display.set_mode(tamanho_tela)
 pygame.display.set_caption('casa das palavras')

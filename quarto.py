@@ -116,7 +116,7 @@ def quarto (tamanho_tela,tela,game_variaveis):
     boneca1 = pygame.image.load('imagens/boneca.png').convert_alpha()
     boneca1 = pygame.transform.scale(boneca1,(54,54))
     boneca2 = pygame.image.load('imagens/boneca_item.png').convert_alpha()
-    boneca2 = pygame.transform.scale(boneca2,(44,54))
+    boneca2 = pygame.transform.scale(boneca2,(40,54))
     boneca2_int = boneca2.get_rect(topleft=(350,420))
 
     #boneca3 = pygame.image.load('imagens/boneca.png').convert_alpha()
@@ -289,14 +289,12 @@ def quarto (tamanho_tela,tela,game_variaveis):
     inicio = pygame.time.get_ticks()
     fundo()
     while True:
-        pygame.init()
-        pygame.mixer.init()
 
         
         
 
-        vida = max(0, min(6,game_variaveis['vida']))
-        selos_quebrados = max(0, min(4,game_variaveis['selos_quebrados']))
+        game_variaveis['vida'] = max(0, min(6,game_variaveis['vida']))
+        game_variaveis['selos_quebrados'] = max(0, min(4,game_variaveis['selos_quebrados']))
 
         tempo_inicio = pygame.time.get_ticks()
         
@@ -316,7 +314,7 @@ def quarto (tamanho_tela,tela,game_variaveis):
                     mouse_pos = event.pos
                     if bau_rect.collidepoint(mouse_pos) and game_variaveis['sala'] == 'guardaroupa'and item_caneta == 1 and not game_variaveis['jogou'] :
                         game_variaveis['estado'] = 'forca'
-                        teste = forca(tela,fundo_atual,tamanho_tela)
+                        teste = forca(tela,game_variaveis['fundo_atual'],tamanho_tela)
                         game_variaveis['estado'] = 'casa'    
                         if teste == 'perdeu':
                             game_variaveis['vida'] -= 1
@@ -353,11 +351,11 @@ def quarto (tamanho_tela,tela,game_variaveis):
 
                 if bilete_forca_int.collidepoint(mouse_pos) and game_variaveis['sala'] == 'criado jogo aberto':
                     if not game_variaveis['jogou_criado'] and item_caneta == 1:
-                        jogo_criado = forca_criado(tela, fundo_atual,tamanho_tela)
+                        jogo_criado = forca_criado(tela, game_variaveis['fundo_atual'],tamanho_tela)
                         if jogo_criado == 'perdeu':
-                            vida -= 1
+                            game_variaveis['vida'] -= 1
                         elif jogo_criado == 'venceu':
-                            game_variaveis['selos_quaebrados'] += 1
+                            game_variaveis['selos_quebrados'] += 1
                             game_variaveis['jogou_criado'] = True   
                 
     #itens---------------------------------
@@ -374,12 +372,12 @@ def quarto (tamanho_tela,tela,game_variaveis):
             fps = 60 
         else:
             fps = 30 
-
-        if sala == 'quarto':
+        
+        if game_variaveis['sala'] == 'quarto':
             colisao = quarto_colisoes   
 
         andando = False
-        if estado == 'casa':
+        if game_variaveis['estado'] == 'casa':
             if  teclas[pygame.K_LEFT]:
                 player_rect.x -= velocidade
                 direcao = 'esquerda'
@@ -443,15 +441,15 @@ def quarto (tamanho_tela,tela,game_variaveis):
             player_rect.x,player_rect.y = 580,220
             player_img = player_deitado              
 
-            if not jogou_cama and item_caneta == 1:   
+            if not game_variaveis['jogou_cama'] and item_caneta == 1:   
                 player_img = player_deitado   
-                forcama = forca_cama(tela,fundo_atual,tamanho_tela)
+                forcama = forca_cama(tela,game_variaveis['fundo_atual'],tamanho_tela)
 
                 if forcama == 'venceu':
-                    jogou_cama = True
-                    selos_quebrados += 1
+                    game_variaveis['jogou_cama'] = True
+                    game_variaveis['selos_quebrados'] += 1
                 elif forcama == 'perdeu':
-                    vida -= 1     
+                    game_variaveis['vida'] -= 1     
 
     #guardaroupa e corredor-----------------------------------------------------------------------------------------------------------------
 
@@ -467,66 +465,66 @@ def quarto (tamanho_tela,tela,game_variaveis):
             
                 
 
-        if player_rect.colliderect(armariro_rect) and teclas[pygame.K_z] and selos_quebrados == 4:
-            if armario == 'aberto':
-                if bau == 'aberto':
-                    sala = 'bau aberto'
-                elif bau == 'fechado':
-                    sala = 'guardaroupa'
-            elif armario == 'fechado':
-                sala = 'guarda roupa fechado'
+        if player_rect.colliderect(armariro_rect) and teclas[pygame.K_z] and game_variaveis['selos_quebrados'] == 4:
+            if game_variaveis['armario'] == 'aberto':
+                if game_variaveis['bau'] == 'aberto':
+                    game_variaveis['sala'] = 'bau aberto'
+                elif game_variaveis['bau'] == 'fechado':
+                    game_variaveis['sala'] = 'guardaroupa'
+            elif game_variaveis['armario'] == 'fechado':
+                game_variaveis['sala'] = 'guarda roupa fechado'
 
-        if sala == 'guardaroupa' and teclas[pygame.K_x]:
-            sala = 'quarto'    
-        if sala == 'guarda roupa fechado' and teclas[pygame.K_x] or sala == 'bau aberto' and teclas[pygame.K_x]:
-            sala = 'quarto' 
-        elif sala == 'guardaroupa' and teclas[pygame.K_2]:
-            armario = 'fechado'
-            sala = 'guarda roupa fechado'       
+        if game_variaveis['sala'] == 'guardaroupa' and teclas[pygame.K_x]:
+            game_variaveis['sala'] = 'quarto'    
+        if game_variaveis['sala'] == 'guarda roupa fechado' and teclas[pygame.K_x] or game_variaveis['sala'] == 'bau aberto' and teclas[pygame.K_x]:
+            game_variaveis['sala'] = 'quarto' 
+        elif game_variaveis['sala'] == 'guardaroupa' and teclas[pygame.K_2]:
+            game_variaveis['armario'] = 'fechado'
+            game_variaveis['sala'] = 'guarda roupa fechado'       
                 
     #criado interaçao-----------------------------------------------------------------------------------------------------------------------
 
 
         if player_rect.colliderect(criado_interasao) and teclas[pygame.K_z]:
-            estado = 'criado'
-            if criado_ab == 'fechado':
-                sala = 'criado fechado'
-            elif criado_ab == 'aberto':
-                sala = 'criado aberto'
+            game_variaveis['estado'] = 'criado'
+            if game_variaveis['criado_ab'] == 'fechado':
+                game_variaveis['sala'] = 'criado fechado'
+            elif game_variaveis['criado_ab'] == 'aberto':
+                game_variaveis['sala'] = 'criado aberto'
 
             
-        if teclas[pygame.K_x] and estado == 'criado':
-            sala = 'quarto'
-            estado = 'casa'
+        if teclas[pygame.K_x] and game_variaveis['estado'] == 'criado':
+            game_variaveis['sala'] = 'quarto'
+            game_variaveis['estado'] = 'casa'
 
         if player_rect.colliderect(criado_interasao_jogo) and teclas[pygame.K_z]:
-            estado = 'criado jogo'
-            if criado_ab_jogo == 'fechado':
-                sala = 'criado jogo fechado'
-            elif criado_ab_jogo == 'aberto':
-                sala = 'criado jogo aberto'
+            game_variaveis['estado'] = 'criado jogo'
+            if game_variaveis['criado_ab_jogo'] == 'fechado':
+                game_variaveis['sala'] = 'criado jogo fechado'
+            elif game_variaveis['criado_ab_jogo'] == 'aberto':
+                game_variaveis['sala'] = 'criado jogo aberto'
 
             
-        if teclas[pygame.K_x] and estado == 'criado jogo':
-            sala = 'quarto'
-            estado = 'casa'
+        if teclas[pygame.K_x] and game_variaveis['estado'] == 'criado jogo':
+            game_variaveis['sala'] = 'quarto'
+            game_variaveis['estado'] = 'casa'
 
     #====================================================================================================================================================
-        if player_rect.colliderect(papel_de_parede_int) and selos_quebrados == 3 and item_caneta == 1 and teclas[pygame.K_z] and not jogou_parede :
-            v_d = ultimo(tela,fundo_atual,tamanho_tela)
+        if player_rect.colliderect(papel_de_parede_int) and game_variaveis['selos_quebrados'] == 3 and item_caneta == 1 and teclas[pygame.K_z] and not game_variaveis['jogou_parede'] :
+            v_d = ultimo(tela,game_variaveis['fundo_atual'],tamanho_tela)
             if v_d == 'perdeu':
-                vida -= 1 
+                game_variaveis['vida'] -= 1 
             elif v_d == 'venceu':
-                selos_quebrados += 1
-                jogou_parede = True
+                game_variaveis['selos_quebrados'] += 1
+                game_variaveis['jogou_parede'] = True
 
-        if player_rect.colliderect(teia_int) and item_caneta == 1 and teclas[pygame.K_z] and not jogou_teia:
-            vit_der = teia_jogo(tela,fundo_atual,tamanho_tela)
+        if player_rect.colliderect(teia_int) and item_caneta == 1 and teclas[pygame.K_z] and not game_variaveis['jogou_teia']:
+            vit_der = teia_jogo(tela,game_variaveis['fundo_atual'],tamanho_tela)
             if vit_der == 'perdeu':
-                vida -= 1 
+                game_variaveis['vida'] -= 1 
             if vit_der == 'venceu':
-                jogou_teia = True
-                selos_quebrados += 1 
+                game_variaveis['jogou_teia'] = True
+                game_variaveis['selos_quebrados'] += 1 
 
 
             
@@ -534,39 +532,54 @@ def quarto (tamanho_tela,tela,game_variaveis):
 
 
     #salas---------------------------------------------------------------------------------------------------------------------    
-        if sala == 'quarto':
-            fundo_atual = fundo_quarto 
-        elif sala == 'guardaroupa':   
-            fundo_atual = fundo_guardaroupa 
-        elif sala == 'guarda roupa fechado':
-            fundo_atual = fundo_guardaroupa_fechado    
-        elif sala == 'bau aberto':
-            fundo_atual = fundo_guardaroupa_bau    
-        elif sala    == 'criado fechado':
-            fundo_atual = criado_fundo_fec
-        elif sala    == 'criado aberto':
-            fundo_atual = criado_fundo_aber
-        elif sala == 'bilete ritual':
-            fundo_atual = bilete_ritual    
-        elif sala == 'criado jogo fechado':
-            fundo_atual = criado_fundo_fec_jogo    
-        elif sala == 'criado jogo aberto':
-            fundo_atual = criado_fundo_aber_jogo   
+        if game_variaveis['sala'] == 'quarto':
+            game_variaveis['fundo_atual'] = fundo_quarto 
+
+
+        elif game_variaveis['sala'] == 'guardaroupa':   
+            game_variaveis['fundo_atual'] = fundo_guardaroupa 
+
+        elif game_variaveis['sala'] == 'guarda roupa fechado':
+            game_variaveis['fundo_atual'] = fundo_guardaroupa_fechado   
+
+
+        elif game_variaveis['sala'] == 'bau aberto':
+            game_variaveis['fundo_atual'] = fundo_guardaroupa_bau    
+
+
+        elif game_variaveis['sala']    == 'criado fechado':
+            game_variaveis['fundo_atual'] = criado_fundo_fec
+
+
+        elif game_variaveis['sala']    == 'criado aberto':
+            game_variaveis['fundo_atual'] = criado_fundo_aber
+
+
+        elif game_variaveis['sala'] == 'bilete ritual':
+            game_variaveis['fundo_atual'] = bilete_ritual    
+
+
+        elif game_variaveis['sala'] == 'criado jogo fechado':
+            game_variaveis['fundo_atual'] = criado_fundo_fec_jogo   
+
+
+        elif game_variaveis['sala'] == 'criado jogo aberto':
+            game_variaveis['fundo_atual'] = criado_fundo_aber_jogo   
         
 
         #inventario----------------------------------------------------------------------------------------------------------
 
 
-        if teclas[pygame.K_c] and estado == 'casa':
-            estado = 'inventario'
-        if teclas[pygame.K_x] and estado == 'inventario':
-            estado = 'casa'    
+        if teclas[pygame.K_c] and game_variaveis['estado'] == 'casa':
+            game_variaveis['estado'] = 'inventario'
+        if teclas[pygame.K_x] and game_variaveis['estado'] == 'inventario':
+            game_variaveis['estado'] = 'casa'    
 
 
     #pentagrma-----------------------------------------------------------------------------------------------------------------------------
 
         if player_rect.colliderect(pentagrama_interagir)  and item_boneca == 1 and teclas[pygame.K_z]:
-            estado = 'invocacao'
+            game_variaveis['estado'] = 'invocacao'
             item_boneca -=1
             agora = pygame.time.get_ticks()   
             
@@ -574,11 +587,11 @@ def quarto (tamanho_tela,tela,game_variaveis):
 
     #desenhar na tela -------------------------------------------------------------------------------------------------------------
 
-        if estado == 'casa':
+        if game_variaveis['estado'] == 'casa':
 
                 
     #quarto--------------------------------------------------------------------------------------------------------------------------
-            if sala == 'quarto':
+            if game_variaveis['sala'] == 'quarto':
                 tela.blit(parede_img4,parede4_rect)
                 tela.blit(parede_img3,parede3_rect)
                 tela.blit(parede_img2,parede2_rect)
@@ -596,20 +609,20 @@ def quarto (tamanho_tela,tela,game_variaveis):
                 tela.blit(criado_jogo,criado_interasao_jogo)
                 #oque vai aparecer -----------------
                 
-                tela.blit(fundo_atual,(0, 0))
+                tela.blit(game_variaveis['fundo_atual'],(0, 0))
                 tela.blit(teia,teia_int)
-                if selos_quebrados == 3:
+                if game_variaveis['selos_quebrados'] == 3:
                     tela.blit(papel_de_parede,papel_de_parede_int)
 
-                if selos_quebrados == 0:
+                if game_variaveis['selos_quebrados'] == 0:
                     tela.blit(selo4,(435,96))
-                elif selos_quebrados == 1:
+                elif game_variaveis['selos_quebrados'] == 1:
                     tela.blit(selo3,(435,96))    
-                elif selos_quebrados == 2:
+                elif game_variaveis['selos_quebrados'] == 2:
                     tela.blit(selo2,(435,96))
-                elif selos_quebrados == 3:
+                elif game_variaveis['selos_quebrados'] == 3:
                     tela.blit(selo1,(435,96))     
-                if armario == 'aberto':
+                if game_variaveis['armario'] == 'aberto':
                     tela.blit(armario_aberto,(435,96))
 
                     
@@ -618,29 +631,29 @@ def quarto (tamanho_tela,tela,game_variaveis):
                 tela.blit(player_img, player_rect) 
                 
     #------------------------------------------------------------------
-            elif sala == 'guardaroupa':
+            elif game_variaveis['sala'] == 'guardaroupa':
                 tela.blit(bau_img,bau_rect)
-                tela.blit(fundo_atual,(0,0))
+                tela.blit(game_variaveis['fundo_atual'],(0,0))
                 
     #--------------------------------------------------
-            elif sala == 'guarda roupa fechado':
+            elif game_variaveis['sala'] == 'guarda roupa fechado':
                 tela.blit(abrir,abrir_colisao)
-                tela.blit(fundo_atual,(0,0))       
+                tela.blit(game_variaveis['fundo_atual'],(0,0))       
     #--------------------------------------------------        
-            elif sala == 'bau aberto':
-                tela.blit(fundo_atual,(0,0))  
+            elif game_variaveis['sala'] == 'bau aberto':
+                tela.blit(game_variaveis['fundo_atual'],(0,0))  
                 tela.blit(papel_dobrado,papel_dobrado_int)
-                if item_boneca == 0 and not ritual:
+                if item_boneca == 0 and not game_variaveis['ritual']:
                     tela.blit(boneca2,boneca2_int)
 
-            elif sala == 'bilete ritual':
-                tela.blit(fundo_atual,(0,0))        
+            elif game_variaveis['sala'] == 'bilete ritual':
+                tela.blit(game_variaveis['fundo_atual'],(0,0))        
                 if teclas[pygame.K_x]:
                     sleep(0.5)
-                    sala = 'bau aberto'
+                    game_variaveis['sala'] = 'bau aberto'
     #inventario------------------------------------------------------------------------------------------------------
 
-        elif teclas [pygame.K_c] and estado == 'inventario':
+        elif teclas [pygame.K_c] and game_variaveis['estado'] == 'inventario':
             tela.blit(papel,(0,100)) 
             tela.blit(bara_itens,(200,300))
             if item_boneca >= 1:
@@ -652,50 +665,51 @@ def quarto (tamanho_tela,tela,game_variaveis):
 
 
     #invocaçao----------------------------------------------------------------------------------------------------------------------
-        elif estado == 'invocacao':
-            tela.blit(fundo_atual,(0,0))
+        elif game_variaveis['estado'] == 'invocacao':
+            tela.blit(game_variaveis['fundo_atual'],(0,0))
             
             
 
-            if player_rect.colliderect(pentagrama_interagir)  and estado == 'invocacao':    
+            if player_rect.colliderect(pentagrama_interagir)  and game_variaveis['estado'] == 'invocacao':    
                 b_pentagrama(tela,(350,350))
             
                 if tempo_inicio - agora  >= 6000:
-                    ritual = True
-                    estado = 'casa'  
+                    game_variaveis['ritual'] = True
+                    game_variaveis['estado'] = 'casa'  
                     item_chave_saida = 1
             tela.blit(player_img, player_rect)    
     #-----------------------------------------------------------------------
-        if vida == 0:
-            estado = 'game over'
+        if game_variaveis['vida'] == 0:
+            game_variaveis['estado'] = 'game over'
             tela.fill((0, 0, 0))
-            fundo_atual = game_over
-            tela.blit(fundo_atual,(0, 0))
+            game_variaveis['fundo_atual'] = game_over
+            tela.blit(game_variaveis['fundo_atual'],(0, 0))
     #--------------------------------------------------------------------------
-        elif estado == 'criado':
+        elif game_variaveis['estado'] == 'criado':
             tela.blit(abrir_criado,abrir_criado_col)
-            tela.blit(fundo_atual,(0,0)) 
-            if item_caneta == 0 and criado_ab == 'aberto':
+            tela.blit(game_variaveis['fundo_atual'],(0,0)) 
+            if item_caneta == 0 and game_variaveis['criado_ab'] == 'aberto':
                     tela.blit(caneta_criado,caneta_int) 
             
-        elif estado == 'criado jogo':
-            tela.blit(fundo_atual,(0,0)) 
-            if sala == 'criado jogo aberto':
+        elif game_variaveis['estado'] == 'criado jogo':
+            tela.blit(game_variaveis['fundo_atual'],(0,0)) 
+
+            if game_variaveis['sala'] == 'criado jogo aberto':
                 tela.blit(bilete_forca,bilete_forca_int)
 
 
     #vidas na tela --------------------------------------------------------------------------------------------------------
-        if vida == 5: 
+        if game_variaveis['vida'] == 5: 
             tela.blit(forca1,(0,0))
-        if vida == 4: 
+        if game_variaveis['vida'] == 4: 
             tela.blit(forca2,(0,0))
-        if vida == 3: 
+        if game_variaveis['vida'] == 3: 
             tela.blit(forca3,(0,0))
-        if vida == 2: 
+        if game_variaveis['vida'] == 2: 
             tela.blit(forca4,(0,0))
-        if vida == 1: 
+        if game_variaveis['vida'] == 1: 
             tela.blit(forca5,(0,0))  
-        if vida == 0: 
+        if game_variaveis['vida'] == 0: 
             tela.blit(forca6,(0,0))            
                 
             
