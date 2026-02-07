@@ -220,7 +220,7 @@ def forca_cama(tela,fundo_atual,tamanho_tela):
     
 
     fonte = pygame.font.Font('fontes/Dogica.ttf',32)
-    palavra = 'meliberte'
+    palavra = 'liberte'
     letras = ['_'] * len (palavra)
     letras_usadas = []
     tentativas = 6
