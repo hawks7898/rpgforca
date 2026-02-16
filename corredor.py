@@ -10,7 +10,6 @@ def corredor (tamanho_tela,tela,game_variaveis):
     LARGURA, ALTURA = tamanho_tela
     camera_x = 0
     camera_y = 0
-    colisao = []
     fps = 30
     direcao = 'frente'
     frame = 0
@@ -95,11 +94,24 @@ def corredor (tamanho_tela,tela,game_variaveis):
     player_img = pygame.transform.scale(player_img, (45, 70))
     player_rect = player_img.get_rect(center=(game_variaveis['x'],game_variaveis['y']))
 
+#paredes===========================================================================================================================
+#========================================================================================================================
 
-
+    parede1=pygame.image.load('imagens/parede.png').convert_alpha()
+    parede1 = pygame.transform.scale(parede1,(30,1000))
+    parede1_rect = parede1.get_rect(topleft = (790,150))
+    
+    parede2=pygame.image.load('imagens/parede.png').convert_alpha()
+    parede2 = pygame.transform.scale(parede2,(600,350))
+    parede2_rect = parede2.get_rect(topleft = (640,450))
+#======================================================================================================================
+#================================================================================================================================
+    
     porta_img =pygame.image.load('imagens/porta.png').convert_alpha()
     porta_img = pygame.transform.scale(porta_img,(73,100))
     porta_quarto_rect = porta_img.get_rect(topleft = (410,110))
+
+    colisao_corredor = [parede1_rect,parede2_rect]
 
     while True:
         
@@ -137,7 +149,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
                 player_rect.x -= velocidade
                 direcao = 'esquerda'
                 andando = True
-                for obj in colisao:
+                for obj in colisao_corredor:
                     if player_rect.colliderect(obj):
                         player_rect.left = obj.right
                 
@@ -147,7 +159,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
                 player_rect.x += velocidade
                 direcao = 'direita'
                 andando = True
-                for obj in colisao:
+                for obj in colisao_corredor:
                     if player_rect.colliderect(obj):
                         player_rect.right = obj.left
 
@@ -156,7 +168,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
                 player_rect.y -= velocidade
                 direcao = 'tras'
                 andando = True
-                for obj in colisao:
+                for obj in colisao_corredor:
                     if player_rect.colliderect(obj):
                         player_rect.top = obj.bottom 
 
@@ -165,7 +177,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
                 player_rect.y += velocidade 
                 direcao = 'frente'
                 andando = True
-                for obj in colisao:
+                for obj in colisao_corredor:
                     if player_rect.colliderect(obj):
                         player_rect.bottom = obj.top     
             camera_x = player_rect.centerx - LARGURA // 2
@@ -218,6 +230,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
         if game_variaveis['estado'] == 'casa':
             tela.blit(fundo, (-camera_x, -camera_y))
             tela.blit(porta_img,(porta_quarto_rect.x-camera_x,porta_quarto_rect.y-camera_y))
+            #tela.blit(parede2,(parede2_rect.x-camera_x, parede2_rect.y-camera_y))
             tela.blit(player_img, (player_rect.x - camera_x, player_rect.y - camera_y))
                 
 

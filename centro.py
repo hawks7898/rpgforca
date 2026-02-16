@@ -28,12 +28,14 @@ game_variaveis ={
     #itens========================
     'item_caneta': 0,
     'item_boneca': 0,
-    'item_chave_boneca': 0,
+    'item_chave_boneca': 0, 
     'item_chave_saida': 0,
     'pegou_c_s': False,
     'pegou_c_b': False,
 }
+ 
 
+ 
 #====================================================================================================================================
 
 pygame.init()
@@ -44,6 +46,8 @@ onde = ''
 tamanho_tela = (800,700)
 tela = pygame.display.set_mode(tamanho_tela)
 pygame.display.set_caption('casa das palavras')
+
+
 while True:
 
     if not game_variaveis['fase1'] or onde == 'quarto': 
