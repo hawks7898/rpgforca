@@ -104,6 +104,30 @@ def corredor (tamanho_tela,tela,game_variaveis):
     parede2=pygame.image.load('imagens/parede.png').convert_alpha()
     parede2 = pygame.transform.scale(parede2,(600,350))
     parede2_rect = parede2.get_rect(topleft = (640,450))
+
+    parede3=pygame.image.load('imagens/parede.png').convert_alpha()
+    parede3 = pygame.transform.scale(parede3,(100,350))
+    parede3_rect = parede3.get_rect(topleft = (25,490))
+
+    parede4=pygame.image.load('imagens/parede.png').convert_alpha()
+    parede4 = pygame.transform.scale(parede4,(240,570))
+    parede4_rect = parede4.get_rect(topleft = (25,40))
+
+    parede5=pygame.image.load('imagens/parede.png').convert_alpha()
+    parede5 = pygame.transform.scale(parede5,(240,570))
+    parede5_rect = parede5.get_rect(topleft = (25,830))
+
+    parede6=pygame.image.load('imagens/parede.png').convert_alpha()
+    parede6 = pygame.transform.scale(parede6,(600,250))
+    parede6_rect = parede6.get_rect(topleft = (640,0))
+
+    parede7=pygame.image.load('imagens/parede.png').convert_alpha()
+    parede7 = pygame.transform.scale(parede7,(1000,150))
+    parede7_rect = parede7.get_rect(topleft = (0,0))
+
+    parede8 = pygame.image.load('imagens/parede.png').convert_alpha()
+    parede8 = pygame.transform.scale(parede8,(1000,150))
+    parede8_rect = parede8.get_rect(topleft = (0,1000))
 #======================================================================================================================
 #================================================================================================================================
     
@@ -111,7 +135,18 @@ def corredor (tamanho_tela,tela,game_variaveis):
     porta_img = pygame.transform.scale(porta_img,(73,100))
     porta_quarto_rect = porta_img.get_rect(topleft = (410,110))
 
-    colisao_corredor = [parede1_rect,parede2_rect]
+    porta_img2 =pygame.image.load('imagens/porta.png').convert_alpha()
+    porta_img2 = pygame.transform.scale(porta_img2,(73,50))
+    porta_quarto_rect2 = porta_img2.get_rect(topleft = (410,110))
+
+    colisao_corredor = [parede1_rect,parede2_rect,
+                        parede3_rect,
+                        parede4_rect,
+                        parede5_rect,
+                        parede6_rect,
+                        parede7_rect,
+                        parede8_rect
+                        ]
 
     while True:
         
@@ -211,7 +246,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
 #=========================================================================================================================================
 #======================================================================================================================================
 
-        if player_rect.colliderect(porta_quarto_rect) and teclas[pygame.K_z]:
+        if player_rect.colliderect(porta_quarto_rect2) and teclas[pygame.K_z]:
             return('quarto')
             break
 
@@ -230,7 +265,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
         if game_variaveis['estado'] == 'casa':
             tela.blit(fundo, (-camera_x, -camera_y))
             tela.blit(porta_img,(porta_quarto_rect.x-camera_x,porta_quarto_rect.y-camera_y))
-            #tela.blit(parede2,(parede2_rect.x-camera_x, parede2_rect.y-camera_y))
+            #tela.blit(parede8,(parede8_rect.x-camera_x, parede8_rect.y-camera_y))
             tela.blit(player_img, (player_rect.x - camera_x, player_rect.y - camera_y))
                 
 
