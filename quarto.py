@@ -20,7 +20,7 @@ def quarto (tamanho_tela,tela,game_variaveis):
     andando = False
     velocidade = 5
     
-
+    temp = temp = pygame.time.get_ticks()
     clock = pygame.time.Clock()
     
 
@@ -455,7 +455,8 @@ def quarto (tamanho_tela,tela,game_variaveis):
             return('corredor')
             break
             
-        elif player_rect.colliderect(porta_rect) and teclas[pygame.K_z] and game_variaveis['item_chave_saida'] == 0:
+        elif player_rect.colliderect(porta_rect) and teclas[pygame.K_z] and game_variaveis['item_chave_saida'] == 0 and tempo_inicio - temp >= 1000:
+            temp = pygame.time.get_ticks()
             trancado()
             
             

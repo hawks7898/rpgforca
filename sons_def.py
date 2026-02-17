@@ -1,4 +1,4 @@
-
+import pygame
 def fundo ():
     import pygame
 
@@ -22,8 +22,5 @@ def interaçao():
     pygame.mixer.music.play(1)    
 
 def trancado():    
-    import pygame
-
-    pygame.mixer.music.load('sons/trancado.ogg')
-    pygame.mixer.music.play(1)   
-    pygame.mixer.music.set_volume(1.0)   
+   som_trancado = pygame.mixer.Sound('sons/trancado.ogg')
+   som_trancado.play()

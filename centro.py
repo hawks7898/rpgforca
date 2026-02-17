@@ -24,12 +24,12 @@ game_variaveis ={
     'jogou_parede': False,
     'jogou_teia': False,
     'selos_quebrados': 0,
-    'fase1': True,
+    'fase1': False,
     #itens========================
     'item_caneta': 0,
     'item_boneca': 0,
     'item_chave_boneca': 0, 
-    'item_chave_saida': 1,
+    'item_chave_saida': 0,
     'pegou_c_s': False,
     'pegou_c_b': False,
 }
@@ -46,7 +46,7 @@ onde = ''
 tamanho_tela = (800,700)
 tela = pygame.display.set_mode(tamanho_tela)
 pygame.display.set_caption('casa das palavras')
-onde = corredor(tamanho_tela, tela,game_variaveis)
+#onde = corredor(tamanho_tela, tela,game_variaveis)
 
 
 while True:
