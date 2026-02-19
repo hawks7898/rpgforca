@@ -1,6 +1,7 @@
 import pygame 
 from quarto import quarto
 from corredor import corredor
+from banheiro import banheiro
 
 pygame.init()
 pygame.display.set_caption('casa das palavras')
@@ -10,6 +11,7 @@ game_variaveis ={
     'x': 500,
     'y': 166,
     'fundo_atual': '',
+    'luz': False,
     'sala': 'quarto',
     'estado':  'casa',
     'vida': 6,
@@ -46,7 +48,7 @@ onde = ''
 tamanho_tela = (800,700)
 tela = pygame.display.set_mode(tamanho_tela)
 pygame.display.set_caption('casa das palavras')
-#onde = corredor(tamanho_tela, tela,game_variaveis)
+#onde = banheiro(tamanho_tela, tela,game_variaveis)
 
 
 while True:
@@ -55,5 +57,6 @@ while True:
         onde = quarto(tamanho_tela, tela,game_variaveis)
     if onde == 'corredor':
         onde = corredor(tamanho_tela, tela,game_variaveis)
-
+    if onde == 'banheiro':
+        onde = banheiro(tamanho_tela, tela,game_variaveis)
 

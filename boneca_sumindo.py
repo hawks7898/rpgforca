@@ -1,8 +1,11 @@
-def b_pentagrama(tela, posicao):
-    import pygame
-    import os
+import pygame
+import os
 
-    # carregar imagens (só na primeira vez)
+def b_pentagrama(tela, posicao,tamanho_tela):
+    escuro = pygame.Surface((tamanho_tela[0], tamanho_tela[1]), pygame.SRCALPHA)
+    escuro.fill((0, 0, 0, 0)) 
+    
+
     if not hasattr(b_pentagrama, "frames"):
         b_pentagrama.frames = []
         for i in range(1, 32):
@@ -15,7 +18,6 @@ def b_pentagrama(tela, posicao):
         b_pentagrama.contador = 0
         b_pentagrama.finalizou = False
 
-    # se já terminou, só desenha o último frame
     if b_pentagrama.finalizou:
         tela.blit(
             b_pentagrama.frames[-1],
@@ -23,9 +25,8 @@ def b_pentagrama(tela, posicao):
         )
         return
 
-    # controle da animação
     b_pentagrama.contador += 1
-    if b_pentagrama.contador >= 5:  # velocidade
+    if b_pentagrama.contador >= 5: 
         b_pentagrama.contador = 0
         b_pentagrama.frame_atual += 1
 
@@ -33,8 +34,10 @@ def b_pentagrama(tela, posicao):
             b_pentagrama.frame_atual = len(b_pentagrama.frames) - 1
             b_pentagrama.finalizou = True
 
-    # desenha
+
+    
     tela.blit(
         b_pentagrama.frames[b_pentagrama.frame_atual],
         posicao
     )
+    tela.blit(escuro,(0,0))

@@ -24,3 +24,7 @@ def interaçao():
 def trancado():    
    som_trancado = pygame.mixer.Sound('sons/trancado.ogg')
    som_trancado.play()
+
+def criado_trancado():    
+   som_trancado2 = pygame.mixer.Sound('sons/Criado_trancado.ogg')
+   som_trancado2.play()   

@@ -5,38 +5,29 @@ from minigame import *
 from time import sleep
 from boneca_sumindo import *
 
-def corredor (tamanho_tela,tela,game_variaveis):
-    
-    escuro = pygame.Surface((tamanho_tela[0], tamanho_tela[1]), pygame.SRCALPHA)
-    escuro.fill((0, 0, 0, 200)) 
 
-    LARGURA, ALTURA = tamanho_tela
-    camera_x = 0
-    camera_y = 0
+def banheiro(tamanho_tela,tela,game_variaveis):
     fps = 30
     direcao = 'frente'
     frame = 0
     tempo = 0 
     andando = False
     velocidade = 5
-    game_variaveis['x'] = 450
-    game_variaveis['y'] = 250
 
     clock = pygame.time.Clock()
     
+    escuro = pygame.Surface((tamanho_tela[0], tamanho_tela[1]), pygame.SRCALPHA)
+    escuro.fill((0, 0, 0, 200))  # preto com transparência
 
     game_over = pygame.image.load('imagens/game_over.png').convert()
     game_over = pygame.transform.scale(game_over, (tamanho_tela))
 
 
-    fundo = pygame.image.load("imagens/corredor.png").convert()
-    fundo = pygame.transform.scale(fundo,(900,1200))
+    fundo = pygame.image.load("salas/banheiro.png").convert()
+    fundo = pygame.transform.scale(fundo,(tamanho_tela))
     fundo_rect = fundo.get_rect()
 
-   
-   
-
-    #vidas sprites---------------------------------------------------------------------------------------------------------
+     #vidas sprites---------------------------------------------------------------------------------------------------------
 
     forca1 = pygame.image.load('vidas/vida1.png').convert_alpha()
     forca1 = pygame.transform.scale(forca1,(120,150))
@@ -96,70 +87,8 @@ def corredor (tamanho_tela,tela,game_variaveis):
     player_img = player_sprites[direcao][frame]
     player_img = pygame.transform.scale(player_img, (45, 70))
     player_rect = player_img.get_rect(center=(game_variaveis['x'],game_variaveis['y']))
-
-#paredes===========================================================================================================================
-#========================================================================================================================
-
-    parede1=pygame.image.load('imagens/parede.png').convert_alpha()
-    parede1 = pygame.transform.scale(parede1,(30,1000))
-    parede1_rect = parede1.get_rect(topleft = (790,150))
     
-    parede2=pygame.image.load('imagens/parede.png').convert_alpha()
-    parede2 = pygame.transform.scale(parede2,(600,350))
-    parede2_rect = parede2.get_rect(topleft = (640,450))
-
-    parede3=pygame.image.load('imagens/parede.png').convert_alpha()
-    parede3 = pygame.transform.scale(parede3,(100,350))
-    parede3_rect = parede3.get_rect(topleft = (25,490))
-
-    parede4=pygame.image.load('imagens/parede.png').convert_alpha()
-    parede4 = pygame.transform.scale(parede4,(240,570))
-    parede4_rect = parede4.get_rect(topleft = (25,40))
-
-    parede5=pygame.image.load('imagens/parede.png').convert_alpha()
-    parede5 = pygame.transform.scale(parede5,(240,570))
-    parede5_rect = parede5.get_rect(topleft = (25,830))
-
-    parede6=pygame.image.load('imagens/parede.png').convert_alpha()
-    parede6 = pygame.transform.scale(parede6,(600,250))
-    parede6_rect = parede6.get_rect(topleft = (640,0))
-
-    parede7=pygame.image.load('imagens/parede.png').convert_alpha()
-    parede7 = pygame.transform.scale(parede7,(1000,150))
-    parede7_rect = parede7.get_rect(topleft = (0,0))
-
-    parede8 = pygame.image.load('imagens/parede.png').convert_alpha()
-    parede8 = pygame.transform.scale(parede8,(1000,150))
-    parede8_rect = parede8.get_rect(topleft = (0,1000))
-#======================================================================================================================
-#================================================================================================================================
-    
-    porta_img =pygame.image.load('imagens/porta.png').convert_alpha()
-    porta_img = pygame.transform.scale(porta_img,(73,100))
-    porta_quarto_rect = porta_img.get_rect(topleft = (410,110))
- 
-    porta_img2 =pygame.image.load('imagens/porta.png').convert_alpha()
-    porta_img2 = pygame.transform.scale(porta_img2,(73,50))
-    porta_quarto_rect2 = porta_img2.get_rect(topleft = (410,110))
-
-    porta_lado = pygame.image.load('salas/porta lado.png').convert_alpha()
-    porta_lado = pygame.transform.scale(porta_lado,(18,100))
-    porta_lado_rect = porta_lado.get_rect(topleft = (755,310))
-
-    porta_lado2 = pygame.image.load('salas/porta lado.png').convert_alpha()
-    porta_lado2 = pygame.transform.scale(porta_lado2,(16,100))
-    porta_lado_rect2 = porta_lado2.get_rect(topleft = (125,680))
-   
-   
-
-    colisao_corredor = [parede1_rect,parede2_rect,
-                        parede3_rect,
-                        parede4_rect,
-                        parede5_rect,
-                        parede6_rect,
-                        parede7_rect,
-                        parede8_rect
-                        ]
+    colisao_corredor = ''
 
     while True:
         
@@ -180,9 +109,8 @@ def corredor (tamanho_tela,tela,game_variaveis):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     mouse_pos = event.pos
-               
 
-#movimento=============================================================================================
+        #movimento=============================================================================================
 #======================================================================================================================================
 
         teclas = pygame.key.get_pressed()
@@ -227,10 +155,9 @@ def corredor (tamanho_tela,tela,game_variaveis):
                 andando = True
                 for obj in colisao_corredor:
                     if player_rect.colliderect(obj):
-                        player_rect.bottom = obj.top     
-            camera_x = player_rect.centerx - LARGURA // 2
-            camera_y = player_rect.centery - ALTURA // 2
-    #animação do player-------------------------------------------------------------------------------------------------
+                        player_rect.bottom = obj.top   
+
+             #animação do player-------------------------------------------------------------------------------------------------
 
         if andando:
             tempo += 1
@@ -253,19 +180,7 @@ def corredor (tamanho_tela,tela,game_variaveis):
         else:    
             player_img = pygame.transform.scale(player_img, (42, 65))    
         
-        camera_x = max(0, min(camera_x, fundo_rect.width - LARGURA))
-        camera_y = max(0, min(camera_y, fundo_rect.height - ALTURA))
-
-#=========================================================================================================================================
-#======================================================================================================================================
-
-        if player_rect.colliderect(porta_quarto_rect2) and teclas[pygame.K_z]:
-            return('quarto')
-            break
-        if player_rect.colliderect(porta_lado_rect2) and teclas[pygame.K_z]:
-            return('banheiro')
-            break    
-   #inventario===============================================================
+        #inventario===============================================================
         if teclas[pygame.K_c] and game_variaveis['estado'] == 'casa':
             game_variaveis['estado'] = 'inventario'
         if teclas[pygame.K_x] and game_variaveis['estado'] == 'inventario':
@@ -278,15 +193,12 @@ def corredor (tamanho_tela,tela,game_variaveis):
     
 
         if game_variaveis['estado'] == 'casa':
-            tela.blit(fundo, (-camera_x, -camera_y))
-            tela.blit(porta_img,(porta_quarto_rect.x-camera_x,porta_quarto_rect.y-camera_y))
-            tela.blit(porta_lado,(porta_lado_rect.x-camera_x,porta_lado_rect.y-camera_y))
-            tela.blit(porta_lado2,(porta_lado_rect2.x-camera_x,porta_lado_rect2.y-camera_y))
-            #tela.blit(parede8,(parede8_rect.x-camera_x, parede8_rect.y-camera_y))
-            tela.blit(player_img, (player_rect.x - camera_x, player_rect.y - camera_y))
-            tela.blit(escuro,(0,0))
+            tela.blit(fundo, (0,0))
+            tela.blit(player_img, player_rect) 
+            if game_variaveis['luz']:
+                tela.blit(escuro,(0,0))
 
-    #inventario------------------------------------------------------------------------------------------------------
+         #inventario------------------------------------------------------------------------------------------------------
 
         elif teclas [pygame.K_c] and game_variaveis['estado'] == 'inventario':
             tela.blit(papel,(0,100)) 
@@ -318,3 +230,4 @@ def corredor (tamanho_tela,tela,game_variaveis):
                 
 
         pygame.display.update()
+    

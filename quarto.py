@@ -5,7 +5,11 @@ from minigame import *
 from time import sleep
 from boneca_sumindo import *
 
+
+
 def quarto (tamanho_tela,tela,game_variaveis):
+    escuro = pygame.Surface((tamanho_tela[0], tamanho_tela[1]), pygame.SRCALPHA)
+    escuro.fill((0, 0, 0, 200)) 
     direcao = 'esquerda'
 
     if game_variaveis['fase1']:
@@ -329,8 +333,9 @@ def quarto (tamanho_tela,tela,game_variaveis):
                 if abrir_criado_col_jogo.collidepoint(mouse_pos) and game_variaveis['sala'] == 'criado jogo fechado' and  game_variaveis['item_chave_boneca'] >= 1:
                     game_variaveis['item_chave_boneca'] = 0 
                     game_variaveis['criado_ab_jogo'] = 'aberto'
-                    game_variaveis['sala'] = 'criado jogo aberto'   
-
+                    game_variaveis['sala'] = 'criado jogo aberto' 
+                elif abrir_criado_col_jogo.collidepoint(mouse_pos) and game_variaveis['sala'] == 'criado jogo fechado' and  game_variaveis['item_chave_boneca'] >= 0:
+                    criado_trancado()
 
                 if boneca2_int.collidepoint(mouse_pos) and game_variaveis['sala'] == 'bau aberto':
                     game_variaveis['item_boneca'] = 1  
@@ -524,7 +529,6 @@ def quarto (tamanho_tela,tela,game_variaveis):
                 game_variaveis['selos_quebrados'] += 1 
 
 
-            
         
 
 
@@ -585,10 +589,12 @@ def quarto (tamanho_tela,tela,game_variaveis):
     #desenhar na tela -------------------------------------------------------------------------------------------------------------
 
         if game_variaveis['estado'] == 'casa':
+            
 
                 
     #quarto--------------------------------------------------------------------------------------------------------------------------
             if game_variaveis['sala'] == 'quarto':
+                tela.fill((0,0,0))
                 tela.blit(parede_img4,parede4_rect)
                 tela.blit(parede_img3,parede3_rect)
                 tela.blit(parede_img2,parede2_rect)
@@ -626,7 +632,9 @@ def quarto (tamanho_tela,tela,game_variaveis):
                 if game_variaveis['item_boneca'] >=1:
                     tela.blit(pentagrama,pentagrama_interagir)
                 tela.blit(player_img, player_rect) 
-                
+                if game_variaveis['luz']:
+                    tela.blit(escuro,(0,0))  
+              
     #------------------------------------------------------------------
             elif game_variaveis['sala'] == 'guardaroupa':
                 tela.blit(bau_img,bau_rect)
@@ -648,6 +656,7 @@ def quarto (tamanho_tela,tela,game_variaveis):
                 if teclas[pygame.K_x]:
                     sleep(0.5)
                     game_variaveis['sala'] = 'bau aberto'
+
     #inventario------------------------------------------------------------------------------------------------------
 
         elif teclas [pygame.K_c] and game_variaveis['estado'] == 'inventario':
@@ -660,7 +669,7 @@ def quarto (tamanho_tela,tela,game_variaveis):
             if game_variaveis['item_chave_boneca'] == 1:
                 tela.blit(chave_criado,(364,312))    
 
-
+        
     #invocaçao----------------------------------------------------------------------------------------------------------------------
         elif game_variaveis['estado'] == 'invocacao':
             tela.blit(game_variaveis['fundo_atual'],(0,0))
@@ -668,14 +677,16 @@ def quarto (tamanho_tela,tela,game_variaveis):
             
 
             if player_rect.colliderect(pentagrama_interagir)  and game_variaveis['estado'] == 'invocacao':    
-                b_pentagrama(tela,(350,350))
-            
+                b_pentagrama(tela,(350,350),tamanho_tela)
+                #tela.blit(escuro,(0,0))
                 if tempo_inicio - agora  >= 6000:
                     game_variaveis['ritual'] = True
                     game_variaveis['estado'] = 'casa'  
                     game_variaveis['item_chave_saida'] = 1
                     game_variaveis['fase1'] = True
+                    game_variaveis['luz'] = True
             tela.blit(player_img, player_rect)    
+
     #-----------------------------------------------------------------------
         if game_variaveis['vida'] == 0:
             game_variaveis['estado'] = 'game over'
@@ -694,7 +705,7 @@ def quarto (tamanho_tela,tela,game_variaveis):
 
             if game_variaveis['sala'] == 'criado jogo aberto':
                 tela.blit(bilete_forca,bilete_forca_int)
-
+#b_pentagrama
 
     #vidas na tela --------------------------------------------------------------------------------------------------------
         if game_variaveis['vida'] == 5: 
