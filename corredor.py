@@ -284,7 +284,8 @@ def corredor (tamanho_tela,tela,game_variaveis):
             tela.blit(porta_lado2,(porta_lado_rect2.x-camera_x,porta_lado_rect2.y-camera_y))
             #tela.blit(parede8,(parede8_rect.x-camera_x, parede8_rect.y-camera_y))
             tela.blit(player_img, (player_rect.x - camera_x, player_rect.y - camera_y))
-            tela.blit(escuro,(0,0))
+            if game_variaveis['luz']:
+                tela.blit(escuro,(0,0))
 
     #inventario------------------------------------------------------------------------------------------------------
 
