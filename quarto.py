@@ -281,10 +281,14 @@ def quarto (tamanho_tela,tela,game_variaveis):
     
     #------------------------------------------------------------------------------------------------------------------------
 
+    sequencia = [1,0,2,0]
+    indice = 0
+
     quarto_colisoes = [parede2_rect,parede3_rect,parede4_rect,parede_rect,cama_esqueda_colisao,cama_direita_colisao,armariosinho_colisao,armariosinho_colisao2,armariro_rect2]
 
     inicio = pygame.time.get_ticks()
-    fundo()
+    if not game_variaveis['fase1']:
+        fundo()  
     while True:
 
         
@@ -416,10 +420,11 @@ def quarto (tamanho_tela,tela,game_variaveis):
 
         if andando:
             tempo += 1
-            if tempo >= 8:
-                frame += 1 
-                if frame > 2:
-                    frame = 1 
+            if tempo >= 7:
+                indice += 1
+                if indice >= len(sequencia):
+                    indice = 0
+                frame = sequencia[indice]    
                 tempo = 0 
         else: 
             frame = 0    
@@ -719,7 +724,7 @@ def quarto (tamanho_tela,tela,game_variaveis):
         if game_variaveis['vida'] == 1: 
             tela.blit(forca5,(0,0))  
         if game_variaveis['vida'] == 0: 
-            tela.blit(forca6,(0,0))            
+            tela.blit(forca6,(0,0))
                 
             
 

@@ -6,7 +6,7 @@ from time import sleep
 from boneca_sumindo import *
 
 
-def banheiro(tamanho_tela,tela,game_variaveis):
+def apenas_uma_forma(tamanho_tela,tela,game_variaveis):
     fps = 30
     direcao = 'frente'
     frame = 0
